@@ -138,10 +138,10 @@ def get_balances():
 
 
 if __name__ == '__main__':
-    # get_balances()
-    scheduler = TwistedScheduler()
-    # scheduler.add_job(main, 'interval', seconds=20, max_instances=1, kwargs={})
-    # scheduler.add_job(get_balances, 'cron', minute = '*/1')
-    scheduler.add_job(get_balances, 'cron', hour = '*/1')
-    scheduler.start()
-    reactor.run()
+    get_balances()
+    # scheduler = TwistedScheduler()
+    # # scheduler.add_job(main, 'interval', seconds=20, max_instances=1, kwargs={})
+    # # scheduler.add_job(get_balances, 'cron', minute = '*/1')
+    # scheduler.add_job(get_balances, 'cron', hour = '*/1')
+    # scheduler.start()
+    # reactor.run()
