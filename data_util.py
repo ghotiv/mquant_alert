@@ -48,5 +48,7 @@ def get_pool_prices():
             i['price']=1/i['price']
     for i in prices:
         i['price']=round(float(i['price']),5)
+    for i in prices:
+        i['symbol']=i['symbol'].replace('WETH','ETH').replace('USDC','USDT') 
     return prices
 
