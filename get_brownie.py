@@ -47,6 +47,12 @@ def get_pool():
 
 POOL = get_pool()
 
+def get_tick(pool=POOL):
+    if not pool:
+        pool = get_pool()
+    res = pool.slot0()[1]
+    return res
+
 def get_twap(twap_duration=60,pool=POOL):
     if not pool:
         pool = get_pool()
@@ -60,6 +66,11 @@ def get_twap_gap(twap_duration=60,pool=POOL):
     twap = get_twap(twap_duration,pool)
     tick = pool.slot0()[1]
     res = abs(twap-tick)
+    return res
+
+@app.get("/get_tick")
+async def fast_get_tick():
+    res = get_tick()
     return res
 
 @app.get("/get_twap")
