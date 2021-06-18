@@ -14,7 +14,7 @@ while 1:
     time.sleep(5)
     try:
         cron_get_twap_gap()
-    except as e:
+    except Exception as e:
         print(e)
 
 
