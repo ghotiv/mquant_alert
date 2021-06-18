@@ -1,3 +1,4 @@
+import uvicorn
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from brownie import project
@@ -35,14 +36,37 @@ def get_pool():
     pool = UniswapV3Core.interface.IUniswapV3Pool(factory.getPool(eth, usdc, 3000))
     return pool
 
-pool = get_pool()
-
-# uvicorn.run("example:app", host="127.0.0.1", port=5000, log_level="info")
-
-def get_twap(pool,twap_duration=60):
+def get_twap(twap_duration=60,pool=None):
+    if not pool:
+        pool = get_pool()
     tickCumulatives,_ = pool.observe([twap_duration,0])
     res = (tickCumulatives[1] - tickCumulatives[0])/twap_duration
     return res
+
+def get_twap_gap(twap_duration=60,pool=None):
+    if not pool:
+        pool = get_pool()
+    twap = get_twap(twap_duration,pool)
+    tick = pool.slot0()[1]
+    res = abs(twap-tick)
+    return res
+
+@app.get("/get_twap")
+async def fast_get_twap(twap_duration: int=60):
+    res = get_twap(twap_duration=twap_duration)
+    return res
+
+@app.get("/get_twap_gap")
+async def fast_get_twap(twap_duration: int=60):
+    res = get_twap_gap(twap_duration=twap_duration)
+    return res
+
+@app.get("/get_pool_prices")
+async def fast_get_pool_prices():
+    res = {'a':1,'b':2}
+    return res
+
+uvicorn.run(app, host="0.0.0.0", port=8008, log_level="info")
 
 
 
