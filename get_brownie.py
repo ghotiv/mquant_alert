@@ -27,23 +27,34 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def load_core_project():
+    res = None
+    for i in project.get_loaded_projects():
+        if str(i) == "<Project 'UniswapVCoreProject'>":
+            res = i
+    if not res:
+        res = project.load("Uniswap/uniswap-v3-core@1.0.0")
+    return res
+
 def get_pool():
     factory_address = "0x1F98431c8aD98523631AE4a59f267346ea31F984"
-    UniswapV3Core = project.load("Uniswap/uniswap-v3-core@1.0.0")
+    UniswapV3Core = load_core_project()
     eth = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
     usdc = '0xdAC17F958D2ee523a2206206994597C13D831ec7'
     factory = UniswapV3Core.interface.IUniswapV3Factory(factory_address)
     pool = UniswapV3Core.interface.IUniswapV3Pool(factory.getPool(eth, usdc, 3000))
     return pool
 
-def get_twap(twap_duration=60,pool=None):
+POOL = get_pool()
+
+def get_twap(twap_duration=60,pool=POOL):
     if not pool:
         pool = get_pool()
     tickCumulatives,_ = pool.observe([twap_duration,0])
     res = (tickCumulatives[1] - tickCumulatives[0])/twap_duration
     return res
 
-def get_twap_gap(twap_duration=60,pool=None):
+def get_twap_gap(twap_duration=60,pool=POOL):
     if not pool:
         pool = get_pool()
     twap = get_twap(twap_duration,pool)
