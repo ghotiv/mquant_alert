@@ -25,7 +25,7 @@ def cron_get_twap_gap():
     deviation = abs(tick - twap)
     should_rebalance = abs(tick - last_tick) > lt // 4
     logger.info(('should_rebalance,last_tick_gap,lt//4', should_rebalance, abs(tick - last_tick), lt // 4))
-    logger.info(('last_tick',tick,last_tick,abs(tick - last_tick)))
+    logger.info(('last_tick,bt,lt',tick,last_tick,abs(tick - last_tick),bt,lt))
     logger.info(('tick_twap_gap,max',tick,twap,deviation,max_twap_deviation))
     
 
