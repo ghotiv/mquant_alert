@@ -52,3 +52,5 @@ def get_pool_prices():
         i['symbol']=i['symbol'].replace('WETH','ETH').replace('USDC','USDT') 
     return prices
 
+def get_
+
