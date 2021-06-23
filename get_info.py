@@ -64,14 +64,28 @@ async def fast_get_av_args(bt:int=3600,lt:int=1200,
 
 @app.get("/get_av_args_by_price")
 async def fast_get_av_args(base_price_percent:float=43.75,limit_price_percent:float=12.76,
-            amount0:float=92.387, amount1:float=280000.0, current_price: float=None):
+            amount0:float=114.65, amount1:float=222530.63, current_price: float=None):
     if not current_price:
         tick = get_tick()
+        current_price = get_price_by_tick(tick)
     else:
-        tick = get_price_by_tick(current_price)
-    bt_price_add = get_price_by_tick(current_price*(1+base_price_percent/100.0))
-    lt_price_add = get_price_by_tick(current_price*(1+limit_price_percent/100.0))
+        tick = get_tick_by_price(current_price)
+    bt_price_add = get_tick_by_price(current_price*(1+base_price_percent/100.0))
+    lt_price_add = get_tick_by_price(current_price*(1+limit_price_percent/100.0))
     bt = abs(bt_price_add-tick)
     lt = abs(lt_price_add-tick)
     res = get_av_args(bt,lt,amount0,amount1,tick)
     return res
+
+@app.get("/manual_rebalance")
+async def fast_manual_rebalance(last_price:float,limit_price_lower:float=None,
+            limit_price_upper:float=None):
+    current_price = get_price_by_tick(get_tick())
+    if not limit_price_lower and not limit_price_upper:
+        limit_percent = 3.19/100.0
+    if limit_price_lower and current_price:
+        limit_percent = abs(current_price-limit_price_lower)/min(current_price,limit_price_lower)
+    current_price_percent = abs(current_price-last_price)/min(current_price,last_price)
+    res = current_price_percent > limit_percent
+    return res
+
