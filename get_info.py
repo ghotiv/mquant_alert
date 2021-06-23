@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from data_util import get_pool_prices,get_tick,get_twap,\
-       get_tick_twap_gap,get_tick_by_price,get_price_by_tick
-from calc_util import get_av_args
+       get_tick_twap_gap
+from calc_util import get_av_args,get_tick_by_price,get_price_by_tick
 
 app = FastAPI()
 
