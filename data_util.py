@@ -1,7 +1,11 @@
 import requests
 import json
+from web3_util import get_contract,contract_functions
 
 URL_GRAPH='https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-testing'
+
+AS_ADDRESS = '0x40C36799490042b31Efc4D3A7F8BDe5D3cB03526'
+CONTRACT_AS = get_contract('contracts/AlphaStrategy.json',AS_ADDRESS)
 
 def get_graphs(query,url=URL_GRAPH):
     return requests.post(url,json={'query': query}).json()
@@ -52,5 +56,16 @@ def get_pool_prices():
         i['symbol']=i['symbol'].replace('WETH','ETH').replace('USDC','USDT') 
     return prices
 
-def get_
+def get_tick():
+    tick = contract_functions(CONTRACT_AS,'getTick')
+    return tick
 
+def get_twap(twap_duration=60):
+    twap = contract_functions(CONTRACT_AS,'getTwap')
+    return twap
+
+def get_tick_twap_gap(twap_duration=60):
+    tick = contract_functions(CONTRACT_AS,'getTick')
+    twap = contract_functions(CONTRACT_AS,'getTwap')
+    res = abs(tick-twap)
+    return res

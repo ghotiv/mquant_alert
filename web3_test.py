@@ -20,4 +20,6 @@ av_address = '0x55535c4c56f6bf373e06c43e44c0356aafd0d21a'
 contract_av = get_contract('contracts/AlphaVault.json',av_address)
 print(see_contract_fuctions(contract_av))
 TotalAmounts = contract_functions(contract_av,'getTotalAmounts')
-print(TotalAmounts)
+totalSupply = contract_functions(contract_av,'totalSupply')
+maxTotalSupply = contract_functions(contract_av,'maxTotalSupply')
+print(TotalAmounts,totalSupply,maxTotalSupply)
