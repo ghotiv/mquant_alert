@@ -13,6 +13,7 @@ twap_duration = contract_functions(contract_as,'twapDuration')
 max_twap_deviation = contract_functions(contract_as,'maxTwapDeviation')
 deviation = abs(tick - twap)
 should_rebalance = abs(tick - last_tick) > lt // 4
+print(bt,lt)
 print('deviation_gap',deviation,max_twap_deviation,max_twap_deviation-deviation)
 print('should_rebalance,last_tick_gap,lt//4', should_rebalance, abs(tick - last_tick), lt // 4)
 

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from data_util import get_pool_prices,get_tick,get_twap,\
-       get_tick_twap_gap
+       get_tick_twap_gap,get_tick_by_price,get_price_by_tick
 from calc_util import get_av_args
 
 app = FastAPI()
@@ -51,5 +51,27 @@ async def fast_get_av_args(bt:int=2977,lt:int=577,amount0:float=92.387,\
         amount1:float=280000.0,tick: int=None):
     if not tick:
         tick = get_tick()
+    res = get_av_args(bt,lt,amount0,amount1,tick)
+    return res
+
+@app.get("/get_av_args")
+async def fast_get_av_args(bt:int=3600,lt:int=1200,
+            amount0:float=92.387, amount1:float=280000.0, tick:float=None):
+    if not tick:
+        tick = get_tick()
+    res = get_av_args(bt,lt,amount0,amount1,tick)
+    return res
+
+@app.get("/get_av_args_by_price")
+async def fast_get_av_args(base_price_percent:float=43.75,limit_price_percent:float=12.76,
+            amount0:float=92.387, amount1:float=280000.0, current_price: float=None):
+    if not current_price:
+        tick = get_tick()
+    else:
+        tick = get_price_by_tick(current_price)
+    bt_price_add = get_price_by_tick(current_price*(1+base_price_percent/100.0))
+    lt_price_add = get_price_by_tick(current_price*(1+limit_price_percent/100.0))
+    bt = abs(bt_price_add-tick)
+    lt = abs(lt_price_add-tick)
     res = get_av_args(bt,lt,amount0,amount1,tick)
     return res
